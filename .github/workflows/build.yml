@@ -37,7 +37,7 @@ jobs:
           name: TodoList-JAR
           path: target/*.jar
 
-  # Опционально: создать релиз при пуше тега
+  # Опционально: релиз при создании тега
   release:
     needs: build-jar
     runs-on: ubuntu-latest
