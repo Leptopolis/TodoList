@@ -14,11 +14,13 @@
 	<artifactId>todoList</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>todoList</name>
-	<description>Todo List Application</description>
+	<description>Todo List Application with JavaFX</description>
 
 	<properties>
 		<java.version>17</java.version>
 		<javafx.version>17.0.2</javafx.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 	</properties>
 
 	<dependencies>
@@ -89,18 +91,24 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-				        <mainClass>com.example.todoList.TodoListApplication</mainClass>
-        				<layout>JAR</layout>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+					<mainClass>com.example.todoList.TodoListApplication</mainClass>
 				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
-			<!-- Compiler Plugin (ОБЯЗАТЕЛЬНО для JavaFX) -->
+			<!-- Compiler Plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -131,6 +139,18 @@
 					</options>
 				</configuration>
 			</plugin>
+
+			<!-- Surefire Plugin для тестов -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>
+						--add-modules javafx.controls,javafx.fxml
+					</argLine>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
+
 </project>
