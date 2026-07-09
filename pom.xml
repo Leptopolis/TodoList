@@ -15,7 +15,6 @@
     <artifactId>todoList</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>todoList</name>
-    <description>Todo List Application with JavaFX</description>
 
     <properties>
         <java.version>17</java.version>
@@ -65,21 +64,26 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.7.1</version>
                 <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                    <mainClass>com.example.todoList.TodoListApplication</mainClass>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.example.todoList.TodoListApplication</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <finalName>todoList</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
                 <executions>
                     <execution>
+                        <phase>package</phase>
                         <goals>
-                            <goal>repackage</goal>
+                            <goal>single</goal>
                         </goals>
                     </execution>
                 </executions>
