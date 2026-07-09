@@ -1,4 +1,4 @@
-name: Build Windows .exe
+name: Build JAR
 
 on:
   push:
@@ -6,20 +6,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-windows:
-    runs-on: windows-latest
+  build-jar:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Liberica Full JDK (with JavaFX)
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'liberica'
           java-version: '17'
-          type: 'jdk'
-          check-latest: true
+          distribution: 'temurin'
 
       - name: Cache Maven dependencies
         uses: actions/cache@v3
@@ -31,21 +29,8 @@ jobs:
       - name: Build JAR (skip tests)
         run: ./mvnw clean package -DskipTests
 
-      - name: Install WiX Toolset
-        run: choco install wixtoolset -y
-
-      - name: Create Windows .exe
-        run: |
-          jpackage `
-            --input target/ `
-            --name TodoList `
-            --main-jar todoList-0.0.1-SNAPSHOT.jar `
-            --main-class com.example.todoList.TodoListApplication `
-            --type exe `
-            --dest dist/
-
-      - name: Upload .exe artifact
+      - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TodoList-Windows-Installer
-          path: dist/*.exe
+          name: TodoList-JAR
+          path: target/*.jar
