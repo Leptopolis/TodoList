@@ -35,18 +35,16 @@ jobs:
         run: choco install wixtoolset -y
 
       - name: Create Windows EXE with embedded JavaFX
-        run: |
-          jpackage `
-            --input target/ `
-            --name TodoList `
-            --main-jar todoList-0.0.1-SNAPSHOT.jar `
-            --main-class com.example.todoList.TodoListApplication `
-            --type app-image `
-            --dest dist/ `
-            --win-console `
-            --vendor "YourName" `
-            --copyright "2026 YourName" `
-            --app-version "1.0.0"
+          run: |
+            jpackage `
+              --input target/ `
+              --name TodoList `
+              --main-jar todoList-0.0.1-SNAPSHOT.jar `
+              --main-class com.example.todoList.TodoListApplication `
+              --type app-image `
+              --dest dist/ `
+              --win-console `
+              --add-modules javafx.controls,javafx.fxml
 
       - name: Upload EXE as artifact
         uses: actions/upload-artifact@v4
