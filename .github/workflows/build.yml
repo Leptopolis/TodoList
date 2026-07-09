@@ -16,9 +16,9 @@ jobs:
       - name: Set up Liberica Full JDK (with JavaFX)
         uses: actions/setup-java@v4
         with:
-          distribution: 'liberica'          # ← Liberica Full JDK
+          distribution: 'liberica'
           java-version: '17'
-          type: 'jdk'                       # ← обычный JDK (не JRE)
+          type: 'jdk'
           check-latest: true
 
       - name: Cache Maven dependencies
@@ -42,10 +42,7 @@ jobs:
             --main-jar todoList-0.0.1-SNAPSHOT.jar `
             --main-class com.example.todoList.TodoListApplication `
             --type exe `
-            --dest dist/ `
-            --win-dir-chooser `
-            --win-shortcut `
-            --win-menu
+            --dest dist/
 
       - name: Upload .exe artifact
         uses: actions/upload-artifact@v4
