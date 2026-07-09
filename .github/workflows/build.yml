@@ -1,51 +1,13 @@
-name: Build JAR and Windows EXE
+name: Build Windows EXE
 
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  # ============================================
-  # JOB 1: Build JAR (Linux)
-  # ============================================
-  build-jar:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-
-      - name: Build JAR
-        run: ./mvnw clean package -DskipTests
-
-      - name: Upload JAR
-        uses: actions/upload-artifact@v4
-        with:
-          name: TodoList-JAR
-          path: target/*.jar
-
-  # ============================================
-  # JOB 2: Build Windows EXE
-  # ============================================
   build-windows:
     runs-on: windows-latest
-    needs: build-jar
 
     steps:
       - name: Checkout code
@@ -64,7 +26,7 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Build JAR
+      - name: Build JAR (with layout=NONE)
         run: ./mvnw clean package -DskipTests
 
       - name: Download JavaFX SDK
@@ -96,29 +58,3 @@ jobs:
         with:
           name: TodoList-Windows
           path: dist/TodoList/
-
-  # ============================================
-  # JOB 3: Release (optional)
-  # ============================================
-  release:
-    needs: [build-jar, build-windows]
-    runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
-    steps:
-      - name: Download JAR
-        uses: actions/download-artifact@v4
-        with:
-          name: TodoList-JAR
-
-      - name: Download Windows EXE
-        uses: actions/download-artifact@v4
-        with:
-          name: TodoList-Windows
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            *.jar
-            TodoList-Windows/**
-          generate_release_notes: true
