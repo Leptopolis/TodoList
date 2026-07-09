@@ -3,6 +3,8 @@ name: Build JAR
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
@@ -34,3 +36,20 @@ jobs:
         with:
           name: TodoList-JAR
           path: target/*.jar
+
+  # Опционально: создать релиз при пуше тега
+  release:
+    needs: build-jar
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Download JAR artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: TodoList-JAR
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "*.jar"
+          generate_release_notes: true
