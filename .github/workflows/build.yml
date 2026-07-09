@@ -26,7 +26,7 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Build JAR (with layout=NONE)
+      - name: Build JAR
         run: ./mvnw clean package -DskipTests
 
       - name: Download JavaFX SDK
@@ -43,7 +43,8 @@ jobs:
             --input target/ `
             --name TodoList `
             --main-jar todoList-0.0.1-SNAPSHOT.jar `
-            --main-class com.example.todoList.TodoListApplication `
+            --main-class org.springframework.boot.loader.launch.JarLauncher `
+            --java-options "-Dspring-boot.run.main=com.example.todoList.TodoListApplication" `
             --type app-image `
             --dest dist/ `
             --win-console `
