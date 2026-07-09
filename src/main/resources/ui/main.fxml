@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/23" 
+    xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="com.example.todoList.ui.MainController"
+    spacing="10" style="-fx-padding: 20;">
+    
+    <!-- Заголовок -->
+    <Label text="📋 Todo List" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <!-- Форма добавления -->
+    <HBox spacing="10">
+        <VBox spacing="5" HBox.hgrow="ALWAYS">
+            <Label text="Заголовок:"/>
+            <TextField fx:id="titleField" promptText="Введите заголовок..."/>
+        </VBox>
+        <VBox spacing="5" HBox.hgrow="ALWAYS">
+            <Label text="Описание:"/>
+            <TextArea fx:id="descriptionArea" promptText="Описание..." prefHeight="60"/>
+        </VBox>
+    </HBox>
+
+    <HBox spacing="10">
+        <VBox spacing="5">
+            <Label text="Статус:"/>
+            <ComboBox fx:id="statusCombo"/>
+        </VBox>
+        <VBox spacing="5">
+            <Label text="Дедлайн:"/>
+            <DatePicker fx:id="deadlinePicker"/>
+        </VBox>
+        <Button text="➕ Добавить" onAction="#addTodo" style="-fx-background-color: #4CAF50; -fx-text-fill: white;">
+            <VBox.margin><Insets top="20"/></VBox.margin>
+        </Button>
+    </HBox>
+
+    <Separator/>
+
+    <!-- Таблица -->
+    <TableView fx:id="todoTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+            <TableColumn fx:id="colTitle" text="Заголовок" prefWidth="200"/>
+            <TableColumn fx:id="colDescription" text="Описание" prefWidth="250"/>
+            <TableColumn fx:id="colStatus" text="Статус" prefWidth="100"/>
+            <TableColumn fx:id="colDeadline" text="Дедлайн" prefWidth="150"/>
+        </columns>
+    </TableView>
+
+    <!-- Кнопки действий -->
+    <HBox spacing="10">
+        <Button text="✅ Завершить" onAction="#markCompleted" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+        <Button text="🗑️ Удалить" onAction="#deleteTodo" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+    </HBox>
+
+</VBox>
