@@ -1,0 +1,56 @@
+name: Build Windows .exe
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Build JAR with Maven
+        run: ./mvnw clean package
+
+      - name: Install WiX Toolset
+        run: |
+          choco install wixtoolset -y
+
+      - name: Create Windows .exe installer
+        run: |
+          jpackage `
+            --input target/ `
+            --name TodoList `
+            --main-jar todoList-0.0.1-SNAPSHOT.jar `
+            --main-class com.example.todoList.TodoListApplication `
+            --type exe `
+            --dest dist/ `
+            --win-dir-chooser `
+            --win-shortcut `
+            --win-menu
+
+      # 7. Загружаем .exe как артефакт
+      - name: Upload .exe artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TodoList-Windows-Installer
+          path: dist/*.exe
