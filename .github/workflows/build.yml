@@ -3,19 +3,23 @@ name: Build Windows .exe
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build-windows:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up Liberica Full JDK (with JavaFX)
         uses: actions/setup-java@v4
         with:
+          distribution: 'liberica'          # ← Liberica Full JDK
           java-version: '17'
-          distribution: 'temurin'
+          type: 'jdk'                       # ← обычный JDK (не JRE)
+          check-latest: true
 
       - name: Cache Maven dependencies
         uses: actions/cache@v3
@@ -25,14 +29,23 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build JAR (skip tests)
-        run: ./mvnw clean package -DskipTests   # ← КЛЮЧЕВОЕ ИЗМЕНЕНИЕ
+        run: ./mvnw clean package -DskipTests
 
       - name: Install WiX Toolset
         run: choco install wixtoolset -y
 
       - name: Create Windows .exe
         run: |
-          jpackage --input target/ --name TodoList --main-jar todoList-0.0.1-SNAPSHOT.jar --main-class com.example.todoList.TodoListApplication --type exe --dest dist/ --win-dir-chooser --win-shortcut --win-menu
+          jpackage `
+            --input target/ `
+            --name TodoList `
+            --main-jar todoList-0.0.1-SNAPSHOT.jar `
+            --main-class com.example.todoList.TodoListApplication `
+            --type exe `
+            --dest dist/ `
+            --win-dir-chooser `
+            --win-shortcut `
+            --win-menu
 
       - name: Upload .exe artifact
         uses: actions/upload-artifact@v4
