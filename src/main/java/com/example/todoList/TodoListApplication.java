@@ -9,9 +9,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EnableJpaAuditing 
+@EnableJpaAuditing
+@EnableJpaRepositories(basePackages = "com.example.todoList.repository") 
 public class TodoListApplication {
 
     private static ConfigurableApplicationContext springContext;
