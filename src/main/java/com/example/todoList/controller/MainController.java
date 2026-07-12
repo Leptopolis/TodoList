@@ -5,6 +5,7 @@ import com.example.todoList.enums.TodoStatus;
 import com.example.todoList.service.TodoService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ComboBox;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -29,6 +30,9 @@ public class MainController {
     @FXML private ComboBox<TodoStatus> statusCombo;
     @FXML private DatePicker deadlinePicker;
 
+    @FXML
+    private ComboBox<TodoStatus> statusComboBox;
+
     private ObservableList<Todo> todoList = FXCollections.observableArrayList();
 
     @FXML
@@ -43,6 +47,10 @@ public class MainController {
         // Заполняем ComboBox статусами
         statusCombo.setItems(FXCollections.observableArrayList(TodoStatus.values()));
         statusCombo.setValue(TodoStatus.PENDING);
+
+        ObservableList<TodoStatus> statuses = FXCollections.observableArrayList(TodoStatus.values());
+        statusComboBox.setItems(statuses);
+        statusComboBox.setValue(TodoStatus.PENDING); // значение по умолчанию
 
         // Загружаем данные
         loadTodos();
@@ -71,6 +79,19 @@ public class MainController {
 
         todoService.create(todo);
         clearFields();
+        loadTodos();
+    }
+
+    @FXML
+    public void changeStatus(){
+        Todo selected = todoTable.getSelectionModel().getSelectedItem();
+        TodoStatus selectedStatus = statusComboBox.getValue();
+        if(selectedStatus == TodoStatus.COMPLETED){
+            todoService.delete(selected.getId());
+            loadTodos();
+            return;
+        }
+        todoService.changeStatus(selected.getId(), selectedStatus);
         loadTodos();
     }
 

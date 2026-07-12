@@ -36,6 +36,10 @@
         <Button text="➕ Добавить" onAction="#addTodo" style="-fx-background-color: #4CAF50; -fx-text-fill: white;">
             <VBox.margin><Insets top="20"/></VBox.margin>
         </Button>
+        <Button text="Change status to:" onAction="#changeStatus" style="-fx-background-color: #4CAF50; -fx-text-fill: white;">
+            <VBox.margin><Insets top="20"/></VBox.margin>
+        </Button>
+        <ComboBox fx:id="statusComboBox" />
     </HBox>
 
     <Separator/>
